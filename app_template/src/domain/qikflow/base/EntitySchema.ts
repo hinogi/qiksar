@@ -1,251 +1,325 @@
-import EntityField, {defaultFieldOptions, hiddenFieldOptions, defaultEnumOptions, fieldOptions, defaultIntFieldOptions, IFieldDefinition } from './EntityField';
-import { TranslateRecord } from './GqlTypes';
-import Query, { defaultFetchMode, fetchMode } from './Query'
+import EntityField, {
+  defaultFieldOptions,
+  hiddenFieldOptions,
+  defaultEnumOptions,
+  fieldOptions,
+  defaultIntFieldOptions,
+  IFieldDefinition,
+} from "./EntityField";
+import { TranslateRecord } from "./GqlTypes";
+import Query, { defaultFetchMode, fetchMode } from "./Query";
 
 interface IInclude {
-    schema: string
-    key_column_name: string
-    ref_column_name: string
-    ref_columns: string
+  schema: string;
+  key_column_name: string;
+  ref_column_name: string;
+  ref_columns: string;
 }
 
 export default class EntitySchema {
-    private _description: string;
-    private _entityType: string;
-    private _fields: Array<EntityField>;
-    private _key: string;
-    private _is_enum: boolean;
-    private _includes: IInclude[];
-	private _createSelection: TranslateRecord;
+  private _description: string;
+  private _entityType: string;
+  private _fields: Array<EntityField>;
+  private _key: string;
+  private _is_enum: boolean;
+  private _includes: IInclude[];
+  private _createSelection: TranslateRecord;
 
-    private static _schemas:Array<EntitySchema> = [];
-    static get Schemas(): Array<EntitySchema> { return this._schemas; } 
+  private static _schemas: Array<EntitySchema> = [];
+  static get Schemas(): Array<EntitySchema> {
+    return this._schemas;
+  }
 
-    get SelectionTranslator(): TranslateRecord { return this._createSelection; }
-    ToSelection(f:TranslateRecord):EntitySchema {
-        this._createSelection = f;
-        return this;
-    }
-    
-    constructor(entityType: string, key:string, description: string, isEnum = false) {
-        this._entityType = entityType.toLowerCase();
-        this._key = key;
-        this._description = description;
-        this._fields = new Array<EntityField>();
-        this._is_enum = isEnum;
-        this._includes = [];
-        this._createSelection = ({}) => { return { id: 'Use ToSelection', Description:''} };
-    }
+  get SelectionTranslator(): TranslateRecord {
+    return this._createSelection;
+  }
+  ToSelection(f: TranslateRecord): EntitySchema {
+    this._createSelection = f;
+    return this;
+  }
 
-    static ResolveReferences():void {
-        this._schemas.map(s => s.Resolve());
-    }
+  constructor(
+    entityType: string,
+    key: string,
+    description: string,
+    isEnum = false
+  ) {
+    this._entityType = entityType.toLowerCase();
+    this._key = key;
+    this._description = description;
+    this._fields = new Array<EntityField>();
+    this._is_enum = isEnum;
+    this._includes = [];
+    this._createSelection = ({}) => {
+      return { id: "Use ToSelection", Description: "" };
+    };
+  }
 
-    static GetSchemaForEntity(entityName: string): EntitySchema|null {
-        entityName = entityName.toLowerCase();
-     
-        const schemas = this._schemas.filter((s:EntitySchema) => s.EntityType === entityName);
+  static ResolveReferences(): void {
+    this._schemas.map((s) => s.Resolve());
+  }
 
-        return schemas.length > 0 ? schemas[0] : null;
-    }
+  static GetSchemaForEntity(entityName: string): EntitySchema | null {
+    entityName = entityName.toLowerCase();
 
-    static Create(entityType: string, key:string, description: string | undefined): EntitySchema {
-        entityType = entityType.toLowerCase();
-      
-        const schema: EntitySchema = new EntitySchema(entityType, key, description ?? entityType);
+    const schemas = this._schemas.filter(
+      (s: EntitySchema) => s.EntityType === entityName
+    );
 
-        if(this.GetSchemaForEntity(entityType))
-            throw `!!!! FATAL ERROR: Schema has already been registered for entity type${schema.EntityType}`
+    return schemas.length > 0 ? schemas[0] : null;
+  }
 
-        this._schemas.push(schema);
+  static Create(
+    entityType: string,
+    key: string,
+    description: string | undefined
+  ): EntitySchema {
+    entityType = entityType.toLowerCase();
 
-        return schema.SetKey(key);
-    }
+    const schema: EntitySchema = new EntitySchema(
+      entityType,
+      key,
+      description ?? entityType
+    );
 
-    static CreateEnum(entityType: string, key:string, description: string | undefined): EntitySchema {
-        entityType = entityType.toLowerCase();
+    if (this.GetSchemaForEntity(entityType))
+      throw `!!!! FATAL ERROR: Schema has already been registered for entity type${schema.EntityType}`;
 
-        const schema: EntitySchema = new EntitySchema(entityType, 'name', description ?? entityType, true);
+    this._schemas.push(schema);
 
-        if(this.GetSchemaForEntity(entityType))
-            throw `!!!! FATAL ERROR: Schema has already been registered for entity type${schema.EntityType}`
+    return schema.SetKey(key);
+  }
 
-        this._schemas.push(schema);
-        
-        return schema
-            .SetKey(key, defaultIntFieldOptions)
-            .Field('name', 'Code')
-            .Field('comment', 'Description');
-    }
+  static CreateEnum(
+    entityType: string,
+    key: string,
+    description: string | undefined
+  ): EntitySchema {
+    entityType = entityType.toLowerCase();
 
-    get Description(): string { return this._description}
-    get EntityType(): string { return this._entityType}
-    get Fields(): EntityField[] { return this._fields}
-    get Key():string { return this._key}
-    get IsEnum():boolean{return this._is_enum}
+    const schema: EntitySchema = new EntitySchema(
+      entityType,
+      "name",
+      description ?? entityType,
+      true
+    );
 
-    get LocaleFields(): EntityField[] { return  this._fields.filter(f => f.IsLocale)}
+    if (this.GetSchemaForEntity(entityType))
+      throw `!!!! FATAL ERROR: Schema has already been registered for entity type${schema.EntityType}`;
 
-    Columns(fm:fetchMode, entityStack:string[]): string {
-        let columns = '';
-        let  fields = this.Fields;
+    this._schemas.push(schema);
 
-        switch(fm)
-        {
-            case 'grid':
-                fields = fields.filter(f => f.IsKey || f.IsOnTable);
-                break;
+    return schema
+      .SetKey(key, defaultIntFieldOptions)
+      .Field("name", "Code")
+      .Field("comment", "Description");
+  }
 
-            case 'light':
-                fields = fields.filter(f => f.IsKey || !f.IsHeavy);
-                break;
+  get Description(): string {
+    return this._description;
+  }
+  get EntityType(): string {
+    return this._entityType;
+  }
+  get Fields(): EntityField[] {
+    return this._fields;
+  }
+  get Key(): string {
+    return this._key;
+  }
+  get IsEnum(): boolean {
+    return this._is_enum;
+  }
 
-            case 'heavy':
-                // all fields are returned
-                break;
-        }
+  get LocaleFields(): EntityField[] {
+    return this._fields.filter((f) => f.IsLocale);
+  }
 
-        fields.map(f => columns += this.FieldToGql(f, entityStack) + ' ');
-        
-        return columns;
-    }
+  Columns(fm: fetchMode, entityStack: string[]): string {
+    let columns = "";
+    let fields = this.Fields;
 
-    FieldToGql(field: EntityField, entityStack:string[]):string {
-        if('arr obj alias'.indexOf(field.Type) == -1)
-            return field.Name;
+    switch (fm) {
+      case "grid":
+        fields = fields.filter((f) => f.IsKey || f.IsOnTable);
+        break;
 
-        if( (field.Type == 'arr' || field.Type == 'obj') && entityStack.filter(e => e === field.ObjectName).length == 0) {
-            return this.RelatedObjectToGql(field, entityStack);
-        }
+      case "light":
+        fields = fields.filter((f) => f.IsKey || !f.IsHeavy);
+        break;
 
-        return '';
-    }
-
-    RelatedObjectToGql(field: EntityField, entityStack:string[]):string {
-        if (!field.ObjectSchema)
-            throw `Schema reference is missing on ${this.EntityType}.${field.Name}`;
-
-        if (!field.ObjectName)
-            throw `Fieldname of object must be specified on field ${JSON.stringify(field)}`;
-        
-        let field_definition = null;
-        
-        entityStack.push(field.ObjectSchema);
-
-        const refSchema = EntitySchema.GetSchemaForEntity(field.ObjectSchema);
-
-        if(!refSchema)
-            throw `!!!! FATAL ERROR: Entity ${this.EntityType} references unknown schema ${field.ObjectName}`
-
-        // when a referenced object is required the object's key is required in addition to the object
-        // and it's nominated fields. e.g. role_id role {name comment}
-        // role_id can then be edited in the UI and updated
-        const related_object_key = (field.KeyColumnName ?? '');
-
-        // fetch only the nominated columns, or if none are nominated, fetch all
-        if(field.ObjectColumns)
-            field_definition = `${related_object_key} ${field.ObjectName} { ${field.ObjectColumns} }`;
-        else
-            field_definition = `${related_object_key} ${field.ObjectName} { ${refSchema.Columns(defaultFetchMode, entityStack)} }`;
-
-        const index = entityStack.indexOf(field.ObjectName);
-        
-        if(index > 0)
-            entityStack.splice(index,1);
-    
-        return field_definition;
+      case "heavy":
+        // all fields are returned
+        break;
     }
 
-    Field(name: string, label: string, type='Text', options=defaultFieldOptions): EntitySchema
-    {
-        return this.AddField(
-            {
-                name, 
-                label, 
-                type,
-                options
-            } as IFieldDefinition);
+    fields.map((f) => (columns += this.FieldToGql(f, entityStack) + " "));
+
+    return columns;
+  }
+
+  FieldToGql(field: EntityField, entityStack: string[]): string {
+    if ("arr obj alias".indexOf(field.Type) == -1) return field.Name;
+
+    if (
+      (field.Type == "arr" || field.Type == "obj") &&
+      entityStack.filter((e) => e === field.ObjectName).length == 0
+    ) {
+      return this.RelatedObjectToGql(field, entityStack);
     }
 
-    AddField(def: IFieldDefinition): EntitySchema 
-    {
-        this._fields.push(new EntityField(def));
-        return this;
-    }
+    return "";
+  }
 
-    SetKey(name: string, fo: fieldOptions[]=hiddenFieldOptions): EntitySchema {
-        this._key = name;
-        return this.Field(name, 'ID', 'id', fo);
-    }
+  RelatedObjectToGql(field: EntityField, entityStack: string[]): string {
+    if (!field.ObjectSchema)
+      throw `Schema reference is missing on ${this.EntityType}.${field.Name}`;
 
-    UseEnum(view_name:string, key_column_name:string, ref_column_name: string): EntitySchema {
-        const view = Query.GetView(view_name);
-        const key_name = key_column_name ?? view.Schema.Key;
-        const et = view.Schema.EntityType;
-        const desc =view.Schema.Description;
+    if (!field.ObjectName)
+      throw `Fieldname of object must be specified on field ${JSON.stringify(
+        field
+      )}`;
 
-        if(!ref_column_name)
-            ref_column_name = view_name;
+    let field_definition = null;
 
-        return this
-            .Include(et, key_name, ref_column_name, `${view.Schema.Key} name comment`)
-            .Flatten(`${ref_column_name}.name`, desc, defaultIntFieldOptions);
-    }
+    entityStack.push(field.ObjectSchema);
 
-    Include(schema: string, key_column_name:string, ref_column_name: string, ref_columns:string): EntitySchema {
-        this._includes.push(({
-            schema,
-            key_column_name,
-            ref_column_name,
-            ref_columns
-        } as IInclude))
+    const refSchema = EntitySchema.GetSchemaForEntity(field.ObjectSchema);
 
-        return this;
-    }
+    if (!refSchema)
+      throw `!!!! FATAL ERROR: Entity ${this.EntityType} references unknown schema ${field.ObjectName}`;
 
-    Resolve(){
-        this._includes.map(i => {
-            const view = Query.GetView(i.schema);
-            const def = {
-                name:i.schema,
-                object_schema: i.schema,
-                label: view.Schema.Description,
-                type:'obj',
-                 options: ['ontable', 'EntityEditSelect'],
-                key_column_name: i.key_column_name,
-                ref_column_name: i.ref_columns,
-                schema: i.schema,
-                object_name:i.ref_column_name,
-                object_columns: i.ref_columns
-            } as IFieldDefinition;
-            this.AddField(def);
-        });
-    }
+    // when a referenced object is required the object's key is required in addition to the object
+    // and it's nominated fields. e.g. role_id role {name comment}
+    // role_id can then be edited in the UI and updated
+    const related_object_key = field.KeyColumnName ?? "";
 
-    AddArray(schema_name: string, ref_type: string, ref_columns:string): EntitySchema {
-        const view = Query.GetView(schema_name);
+    // fetch only the nominated columns, or if none are nominated, fetch all
+    if (field.ObjectColumns)
+      field_definition = `${related_object_key} ${field.ObjectName} { ${field.ObjectColumns} }`;
+    else
+      field_definition = `${related_object_key} ${
+        field.ObjectName
+      } { ${refSchema.Columns(defaultFetchMode, entityStack)} }`;
 
-        const def = {
-            name: schema_name,
-            label: view.Schema.Description,
-            type: 'arr',
-            object_schema: ref_type,
-            object_columns: ref_columns
-        } as IFieldDefinition
+    const index = entityStack.indexOf(field.ObjectName);
 
-        return this.AddField(def);
-    }
+    if (index > 0) entityStack.splice(index, 1);
 
-    Flatten(path: string, label: string, options = defaultEnumOptions):EntitySchema {
-        const name=path;
-        const def = {
-            name,
-            label,
-            type: 'alias',
-            options,
-            object_columns: path
-        } as IFieldDefinition
+    return field_definition;
+  }
 
-        return this.AddField(def);
-    }
+  Field(
+    name: string,
+    label: string,
+    type = "Text",
+    options = defaultFieldOptions
+  ): EntitySchema {
+    return this.AddField({
+      name,
+      label,
+      type,
+      options,
+    } as IFieldDefinition);
+  }
+
+  AddField(def: IFieldDefinition): EntitySchema {
+    this._fields.push(new EntityField(def));
+    return this;
+  }
+
+  SetKey(name: string, fo: fieldOptions[] = hiddenFieldOptions): EntitySchema {
+    this._key = name;
+    return this.Field(name, "ID", "id", fo);
+  }
+
+  UseEnum(
+    view_name: string,
+    key_column_name: string,
+    ref_column_name: string
+  ): EntitySchema {
+    const view = Query.GetView(view_name);
+    const key_name = key_column_name ?? view.Schema.Key;
+    const et = view.Schema.EntityType;
+    const desc = view.Schema.Description;
+
+    if (!ref_column_name) ref_column_name = view_name;
+
+    return this.Include(
+      et,
+      key_name,
+      ref_column_name,
+      `${view.Schema.Key} name comment`
+    ).Flatten(`${ref_column_name}.name`, desc, defaultIntFieldOptions);
+  }
+
+  Include(
+    schema: string,
+    key_column_name: string,
+    ref_column_name: string,
+    ref_columns: string
+  ): EntitySchema {
+    this._includes.push({
+      schema,
+      key_column_name,
+      ref_column_name,
+      ref_columns,
+    } as IInclude);
+
+    return this;
+  }
+
+  Resolve() {
+    this._includes.map((i) => {
+      const view = Query.GetView(i.schema);
+      const def = {
+        name: i.schema,
+        object_schema: i.schema,
+        label: view.Schema.Description,
+        type: "obj",
+        options: ["ontable", "EntityEditSelect"],
+        key_column_name: i.key_column_name,
+        ref_column_name: i.ref_columns,
+        schema: i.schema,
+        object_name: i.ref_column_name,
+        object_columns: i.ref_columns,
+      } as IFieldDefinition;
+      this.AddField(def);
+    });
+  }
+
+  AddArray(
+    schema_name: string,
+    ref_type: string,
+    ref_columns: string
+  ): EntitySchema {
+    const view = Query.GetView(schema_name);
+
+    const def = {
+      name: schema_name,
+      label: view.Schema.Description,
+      type: "arr",
+      object_schema: ref_type,
+      object_columns: ref_columns,
+    } as IFieldDefinition;
+
+    return this.AddField(def);
+  }
+
+  Flatten(
+    path: string,
+    label: string,
+    options = defaultEnumOptions
+  ): EntitySchema {
+    const name = path;
+    const def = {
+      name,
+      label,
+      type: "alias",
+      options,
+      object_columns: path,
+    } as IFieldDefinition;
+
+    return this.AddField(def);
+  }
 }

@@ -12,23 +12,21 @@
 </template>
 
 <script lang="ts" setup>
-import EntityField from '../base/EntityField';
-import { GqlRecord } from '../base/GqlTypes';
+import EntityField from "../base/EntityField";
+import { GqlRecord } from "../base/GqlTypes";
 
 const props = defineProps<{
-  field: EntityField,
-  entity: GqlRecord
+  field: EntityField;
+  entity: GqlRecord;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
+  (e: "update:modelValue", value: string): void;
 }>();
 
 function onUpdate(value: string) {
-  if (!value)
-    return;
+  if (!value) return;
 
-  emit('update:modelValue', value);
+  emit("update:modelValue", value);
 }
-
 </script>

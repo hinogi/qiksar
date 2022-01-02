@@ -6,80 +6,80 @@ configuration:
   custom_name: iot_devices
   custom_root_fields: {}
 object_relationships:
-- name: device_type
-  using:
-    manual_configuration:
-      column_mapping:
-        device_type_id: name
-      insertion_order: null
-      remote_table:
-        name: iot_device_types
-        schema: membership
-- name: member
-  using:
-    manual_configuration:
-      column_mapping:
-        member_id: member_id
-      insertion_order: null
-      remote_table:
-        name: members
-        schema: membership
+  - name: device_type
+    using:
+      manual_configuration:
+        column_mapping:
+          device_type_id: name
+        insertion_order: null
+        remote_table:
+          name: iot_device_types
+          schema: membership
+  - name: member
+    using:
+      manual_configuration:
+        column_mapping:
+          member_id: member_id
+        insertion_order: null
+        remote_table:
+          name: members
+          schema: membership
 array_relationships:
-- name: iot_messages
-  using:
-    manual_configuration:
-      column_mapping:
-        device_id: device_id
-      insertion_order: null
-      remote_table:
-        name: iot_messages
-        schema: membership
+  - name: iot_messages
+    using:
+      manual_configuration:
+        column_mapping:
+          device_id: device_id
+        insertion_order: null
+        remote_table:
+          name: iot_messages
+          schema: membership
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - device_id
-    - member_id
-    - description
-    - device_type_id
-    - created_at
-    - updated_at
-  role: tenant_admin
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - device_id
+        - member_id
+        - description
+        - device_type_id
+        - created_at
+        - updated_at
+    role: tenant_admin
 select_permissions:
-- permission:
-    columns:
-    - device_id
-    - device_type_id
-    - member_id
-    - description
-    - created_at
-    - updated_at
-    filter: {}
-  role: member
-- permission:
-    columns:
-    - device_id
-    - member_id
-    - description
-    - device_type_id
-    - created_at
-    - updated_at
-    filter: {}
-  role: tenant_admin
+  - permission:
+      columns:
+        - device_id
+        - device_type_id
+        - member_id
+        - description
+        - created_at
+        - updated_at
+      filter: {}
+    role: member
+  - permission:
+      columns:
+        - device_id
+        - member_id
+        - description
+        - device_type_id
+        - created_at
+        - updated_at
+      filter: {}
+    role: tenant_admin
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - device_id
-    - member_id
-    - description
-    - device_type_id
-    - created_at
-    - updated_at
-    filter: {}
-  role: tenant_admin
+  - permission:
+      check: null
+      columns:
+        - device_id
+        - member_id
+        - description
+        - device_type_id
+        - created_at
+        - updated_at
+      filter: {}
+    role: tenant_admin
 delete_permissions:
-- permission:
-    filter: {}
-  role: tenant_admin
+  - permission:
+      filter: {}
+    role: tenant_admin

@@ -1,9 +1,9 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
+  <div
+    class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center"
+  >
     <div>
-      <div style="font-size: 10vh">
-        Logged Out
-      </div>
+      <div style="font-size: 10vh">Logged Out</div>
 
       <q-btn
         to="/members"
@@ -19,16 +19,15 @@
 </template>
 
 <script lang="ts">
-import { AuthWrapper } from 'src/boot/auth';
+import { AuthWrapper } from "src/boot/auth";
 
 export default {
-  name: 'PageLoggedOut',
+  name: "PageLoggedOut",
   beforeCreate() {
     void AuthWrapper.Logout();
   },
-  setup(){
-    return {
-    }
-  }
-}
+  setup() {
+    return {};
+  },
+};
 </script>

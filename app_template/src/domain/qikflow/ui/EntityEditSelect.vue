@@ -15,15 +15,14 @@
 </template>
 
 <script lang="ts" setup>
-
-import EntityField from '../base/EntityField';
-import { GqlRecord, GqlRecords } from '../base/GqlTypes';
-import { CreateStore } from '../store/GenericStore';
-import { ref, onBeforeMount } from 'vue';
+import EntityField from "../base/EntityField";
+import { GqlRecord, GqlRecords } from "../base/GqlTypes";
+import { CreateStore } from "../store/GenericStore";
+import { ref, onBeforeMount } from "vue";
 
 const props = defineProps<{
-  field: EntityField,
-  entity: GqlRecord
+  field: EntityField;
+  entity: GqlRecord;
 }>();
 
 if (!props.field.IsRelation)
@@ -34,7 +33,7 @@ if (!props.field.ObjectSchema)
 
 const emit = defineEmits<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (e: 'update:modelValue', value: number): void
+  (e: "update:modelValue", value: number): void;
 }>();
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -42,28 +41,26 @@ let selectedObject = ref({});
 let options = ref([] as GqlRecords);
 
 onBeforeMount(async () => {
-  if (!props.field?.ObjectSchema)
-    return;
+  if (!props.field?.ObjectSchema) return;
 
   const store = CreateStore(props.field.ObjectSchema);
-  await store.fetchAll()
-    .then(() => {
-      const fieldName = props.field?.AffectedFieldName ?? '';
-      const fieldValue = props.entity[fieldName] as number;
+  await store.fetchAll().then(() => {
+    const fieldName = props.field?.AffectedFieldName ?? "";
+    const fieldValue = props.entity[fieldName] as number;
 
-      options.value = store.GetSelections;
-      selectedObject.value = options.value.filter(f => f['id'] == fieldValue)[0];
-      
-      //console.log(`${props.field.Name} has ${store.Rows.length} selections,  current = ${fieldValue}`);
-    })
+    options.value = store.GetSelections;
+    selectedObject.value = options.value.filter(
+      (f) => f["id"] == fieldValue
+    )[0];
+
+    //console.log(`${props.field.Name} has ${store.Rows.length} selections,  current = ${fieldValue}`);
+  });
 });
 
 function selectionChanged(value: GqlRecord) {
-  if (!value)
-    return;
+  if (!value) return;
 
   selectedObject.value = value;
-  emit('update:modelValue', value['id'] as number);
+  emit("update:modelValue", value["id"] as number);
 }
-
 </script>

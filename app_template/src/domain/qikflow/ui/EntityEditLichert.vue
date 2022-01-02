@@ -18,26 +18,25 @@
 </template>
 
 <script lang="ts" setup>
-import EntityField from '../base/EntityField';
-import { GqlRecord } from '../base/GqlTypes';
-import { computed } from 'vue';
+import EntityField from "../base/EntityField";
+import { GqlRecord } from "../base/GqlTypes";
+import { computed } from "vue";
 
 const props = defineProps<{
-  field: EntityField,
-  entity: GqlRecord
+  field: EntityField;
+  entity: GqlRecord;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: number): void
+  (e: "update:modelValue", value: number): void;
 }>();
 
 const radio_value = computed({
   get() {
-    return (props.entity[props.field.Name] as number)?.toString() ?? '';
+    return (props.entity[props.field.Name] as number)?.toString() ?? "";
   },
   set(newValue: string) {
-    emit('update:modelValue', parseInt(newValue, 10));
-  }
-})
-
+    emit("update:modelValue", parseInt(newValue, 10));
+  },
+});
 </script>

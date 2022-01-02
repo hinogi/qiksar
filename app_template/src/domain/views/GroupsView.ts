@@ -1,34 +1,33 @@
-import Query from '../qikflow/base/Query'
-import EntitySchema from '../qikflow/base/EntitySchema';
+import Query from "../qikflow/base/Query";
+import EntitySchema from "../qikflow/base/EntitySchema";
 
 class GroupsView extends Query {
-    constructor() {
+  constructor() {
+    const schema: EntitySchema = EntitySchema.Create(
+      "groups",
+      "group_id",
+      "Membership Groups"
+    )
 
-        const schema: EntitySchema = EntitySchema.Create(
-            'groups', 
-            'group_id', 
-            'Membership Groups'
-            )
-            
-            .UseEnum('tenants', 'tenant_id', 'tenant')
-            
-            .Field('name', 'Group Name')
-            .Field('state', 'State')
- 
-            .Include('members', 'leader_id','leader', 'member_id firstname lastname')
-            .Flatten('leader.firstname leader.lastname', 'Leader Name')
+      .UseEnum("tenants", "tenant_id", "tenant")
 
-            .ToSelection((r) => { 
-                    return {
-                        id: r.group_id as number,
-                        label: r.name,
-                        description:r.state
-                    }
-                });
+      .Field("name", "Group Name")
+      .Field("state", "State")
 
-        super(schema, true)
-    }
+      .Include("members", "leader_id", "leader", "member_id firstname lastname")
+      .Flatten("leader.firstname leader.lastname", "Leader Name")
+
+      .ToSelection((r) => {
+        return {
+          id: r.group_id as number,
+          label: r.name,
+          description: r.state,
+        };
+      });
+
+    super(schema, true);
+  }
 }
 
 const view = new GroupsView();
-export default view;		
+export default view;

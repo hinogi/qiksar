@@ -8,13 +8,11 @@ Qiksar supports learning, helping you to build Quasar apps faster, securely conn
 
 ## Getting Started Videos
 
-Introduction - https://www.youtube.com/watch?v=ti72vq3aqZw 
+Introduction - https://www.youtube.com/watch?v=ti72vq3aqZw
 Building a fully functioning prototype app with login, and data storage
 
-
-Smart Data   - https://www.youtube.com/watch?v=GLBG6BNlRqc
+Smart Data - https://www.youtube.com/watch?v=GLBG6BNlRqc
 How Qiksar dynamically builds the user interface, and even translates data to foreign languages
-
 
 ## Introduction
 
@@ -24,10 +22,9 @@ The motiviation for this project was to be able to rapidly create a Quasar devel
 
 ### Example of the Objective
 
-Once the detailed instructions below have been followed to completion, you will be able to use your browser to use a Quasar App which manages an imaginary organisation which has a number of members, where the members are placed in specified groups. You can maintain the groups, assign members to groups and maintain the status of members. 
+Once the detailed instructions below have been followed to completion, you will be able to use your browser to use a Quasar App which manages an imaginary organisation which has a number of members, where the members are placed in specified groups. You can maintain the groups, assign members to groups and maintain the status of members.
 
 ![image](https://user-images.githubusercontent.com/45703746/147625282-fe470734-7933-40ff-be9f-532b0811c7a7.png)
-
 
 ### Pre-requisites
 
@@ -49,7 +46,7 @@ Open WSL2 and install the Hasura CLI...
 
 ## Insatall Hasura CLI
 
-For further information, refer to: 
+For further information, refer to:
 https://hasura.io/docs/latest/graphql/core/hasura-cli/install-hasura-cli.html
 
 To install, execute the following command...
@@ -80,7 +77,7 @@ cd dev
 ## Clone the Qiksar repository from github
 
 ```
-git clone git@github.com:chrisnurse/qiksar.git 
+git clone git@github.com:chrisnurse/qiksar.git
 ```
 
 As the source code is now in the WSL filesystem, VS Code will be extremely quick when using remote dev containers.
@@ -90,7 +87,7 @@ As the source code is now in the WSL filesystem, VS Code will be extremely quick
 cd qiksar
 code .
 
-We are now in VS CODE with a remote connection to WSL filesystem where our code is located. 
+We are now in VS CODE with a remote connection to WSL filesystem where our code is located.
 This means, the entire project structure and build tools work the same on Mac and Windows. So you can also do cross-platform development on any computer you prefer.
 
 The qiksar project is maintained directly whilst using VSCODE in WSL as this has access to the repo via SSH, as this is how the source code was cloned from GitHub.
@@ -116,22 +113,24 @@ A number of useful VS Code plugins are also installed.
 In the bottom left corner, we can click on the green container box which currently shows WSL, and opens the command palette.
 Select "Reopen in Container (Remote-Containers)"
 
-The first time this is done, the container will be built. 
+The first time this is done, the container will be built.
 
-If the ```devcontainer.json``` file is ever modified, or is out of sync with the current container image for any reason, VS CODE will offer you the option to rebuild the container. 
+If the `devcontainer.json` file is ever modified, or is out of sync with the current container image for any reason, VS CODE will offer you the option to rebuild the container.
 
 Note: Be cautious in case there are any unsaved changes to your source code which might be at risk. This shouldn't be the case, but better to be safe than sorry, and make sure you preserve any changes.
 
 ## Use the Qiksar Scaffold process to allow us to use our containerised services
+
 Once the remote container has launched, in the VS Code Explorer, you will see the app_template folder and the scaffold.sh script.
 
 Open a terminal and ensure you are in the root of the qiksar project and can see the script file:
 scaffold.sh
 
-It may also be necessary to ensure that there is no current "app" folder, which would be the case if you have execute the scaffold process previously. 
+It may also be necessary to ensure that there is no current "app" folder, which would be the case if you have execute the scaffold process previously.
 If you wish to re-scaffold a clean app, simply remove or rename the folder so you can use your preferred app name
 
 ## Ensure the SCAFFOLD script has execute permission, then run it
+
 chmod u+x scaffold.sh
 scaffold.sh
 
@@ -163,6 +162,7 @@ You can safely ignore any warnings about dependencies and versions, for now.
 When asked, Does your app have typescript support? input Y and press enter
 
 ## Vulnerability Scan
+
 It is always a good idea to scan packages for vulnerabilities that might cause concern for your and your users.
 
 After a few moments the scaffold script will conclude by automatically scanning for vulnerabilities in any of the packages used.
@@ -226,25 +226,26 @@ Open a terminal which will now show the working folder as:
 /workspaces/app
 
 Start serving the Quasar App:
+
 ```
 quasar dev
 ```
 
 ### Compiler error
 
-There is currently an issue in ```.quasar/client-entry.js``` which needs to be fixed manually. I'm investigating the cause of this minor issue.
+There is currently an issue in `.quasar/client-entry.js` which needs to be fixed manually. I'm investigating the cause of this minor issue.
 
 This needs to be fixed manually at the moment, else the app doesn't compile:
 .quasar/client-entry.js need to be fixed for SCSS
 
 **change**
-```import 'src/css/app.sass'```
+`import 'src/css/app.sass'`
 
 to
 
-```import 'src/css/app.scss'```
+`import 'src/css/app.scss'`
 
-### Bypass SSL security warnings in development mode 
+### Bypass SSL security warnings in development mode
 
 When the app launches, in Chrome, if you see "Your connection is not private", use the ADVANCED button and select "Proceed to localhost (unsafe)".
 The error appears because of the need for valid SSL certificates, but we are in developer mode, so this is less important.
@@ -252,7 +253,7 @@ The error appears because of the need for valid SSL certificates, but we are in 
 In your browser, the app is running and connected to the service containers:
 
 ```
-https://localhost:8080/ 
+https://localhost:8080/
 ```
 
 Click the **LOGIN** BUTTON
@@ -266,7 +267,7 @@ Password: password
 
 Use the follwing buttons on the home screen to maintain the different types of data:
 
-* Maintain Members
-* Maintain Groups
-* Maintain Roles
-* Maintain Status
+- Maintain Members
+- Maintain Groups
+- Maintain Roles
+- Maintain Status

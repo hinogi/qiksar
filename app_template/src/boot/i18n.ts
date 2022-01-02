@@ -1,15 +1,15 @@
-import { boot } from 'quasar/wrappers';
-import { createI18n } from 'vue-i18n';
-import messages from 'src/i18n';
+import { boot } from "quasar/wrappers";
+import { createI18n } from "vue-i18n";
+import messages from "src/i18n";
 
-const logWarnings = (process.env.I18N_WARNINGS ?? 'false') === 'true';
+const logWarnings = (process.env.I18N_WARNINGS ?? "false") === "true";
 
 const i18n = createI18n({
   legacy: false,
   silentTranslationWarn: !logWarnings,
   fallbackWarn: logWarnings,
   missingWarn: logWarnings,
-  locale: 'en-AU',
+  locale: "en-AU",
   messages,
 });
 
