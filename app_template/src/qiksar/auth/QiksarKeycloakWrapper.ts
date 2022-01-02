@@ -163,7 +163,7 @@ export class QiksarKeycloakWrapper implements QiksarAuthWrapper {
     }
   
     // The current user will be logged out
-    Logout() {
+    Logout(): void  {
       userStore.$reset();
       void this.keycloak.logout();
     }
