@@ -36,7 +36,7 @@ export class QiksarKeycloakWrapper implements QiksarAuthWrapper {
       else
         this.realm=subdomain;
       
-      console.log('Realm: >' + this.realm + '<');
+      
   
       // Configuration details for REALM and CLIENT
       const kc_config: Keycloak.KeycloakConfig = {
@@ -77,8 +77,8 @@ export class QiksarKeycloakWrapper implements QiksarAuthWrapper {
             profile = p;
           })
         .catch((e) => {
-            console.error('!!!! Failed to load user profile');
-            console.error(JSON.stringify(e));
+            
+            
           });
       }
   
@@ -122,8 +122,8 @@ export class QiksarKeycloakWrapper implements QiksarAuthWrapper {
               .keycloak
               .updateToken(this.kc_min_validity_seconds)
               .catch(e => {
-                console.error('Token refresh failed');
-                console.error('Exception: ' + JSON.stringify(e));
+                
+                
               });
             }
           },
@@ -146,7 +146,7 @@ export class QiksarKeycloakWrapper implements QiksarAuthWrapper {
     // Test if the  user has a specified role
     HasRealmRole(roleName:string | undefined): boolean {
       const hasRole = this.keycloak.hasRealmRole(roleName ?? '');
-      console.log('HasRealmRole: ' + (roleName ?? 'none') + ' = ' + hasRole.toString());
+      
     
       return hasRole;
     }
