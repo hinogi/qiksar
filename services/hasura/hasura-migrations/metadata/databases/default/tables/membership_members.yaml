@@ -6,156 +6,156 @@ configuration:
   custom_name: members
   custom_root_fields: {}
 object_relationships:
-- name: group
-  using:
-    manual_configuration:
-      column_mapping:
-        group_id: group_id
-      insertion_order: null
-      remote_table:
-        name: groups
-        schema: membership
-- name: role
-  using:
-    manual_configuration:
-      column_mapping:
-        role_id: role_id
-      insertion_order: null
-      remote_table:
-        name: roles
-        schema: membership
-- name: status
-  using:
-    manual_configuration:
-      column_mapping:
-        status_id: status_id
-      insertion_order: null
-      remote_table:
-        name: status
-        schema: membership
-- name: tenant
-  using:
-    foreign_key_constraint_on: tenant_id
+  - name: group
+    using:
+      manual_configuration:
+        column_mapping:
+          group_id: group_id
+        insertion_order: null
+        remote_table:
+          name: groups
+          schema: membership
+  - name: role
+    using:
+      manual_configuration:
+        column_mapping:
+          role_id: role_id
+        insertion_order: null
+        remote_table:
+          name: roles
+          schema: membership
+  - name: status
+    using:
+      manual_configuration:
+        column_mapping:
+          status_id: status_id
+        insertion_order: null
+        remote_table:
+          name: status
+          schema: membership
+  - name: tenant
+    using:
+      foreign_key_constraint_on: tenant_id
 array_relationships:
-- name: articles
-  using:
-    manual_configuration:
-      column_mapping:
-        member_id: created_by
-      insertion_order: null
-      remote_table:
-        name: articles
-        schema: membership
-- name: groups
-  using:
-    manual_configuration:
-      column_mapping:
-        member_id: leader_id
-      insertion_order: null
-      remote_table:
-        name: groups
-        schema: membership
-- name: iot_devices
-  using:
-    manual_configuration:
-      column_mapping:
-        member_id: member_id
-      insertion_order: null
-      remote_table:
-        name: iot_devices
-        schema: membership
+  - name: articles
+    using:
+      manual_configuration:
+        column_mapping:
+          member_id: created_by
+        insertion_order: null
+        remote_table:
+          name: articles
+          schema: membership
+  - name: groups
+    using:
+      manual_configuration:
+        column_mapping:
+          member_id: leader_id
+        insertion_order: null
+        remote_table:
+          name: groups
+          schema: membership
+  - name: iot_devices
+    using:
+      manual_configuration:
+        column_mapping:
+          member_id: member_id
+        insertion_order: null
+        remote_table:
+          name: iot_devices
+          schema: membership
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - group_id
-    - member_id
-    - rating
-    - role_id
-    - status_id
-    - tenant_id
-    - user_id
-    - about_me
-    - company
-    - email
-    - firstname
-    - lastname
-    - mobile
-    - photo
-    - created_at
-    - updated_at
-    set:
-      tenant_id: x-hasura-tenant-id
-  role: tenant_admin
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - group_id
+        - member_id
+        - rating
+        - role_id
+        - status_id
+        - tenant_id
+        - user_id
+        - about_me
+        - company
+        - email
+        - firstname
+        - lastname
+        - mobile
+        - photo
+        - created_at
+        - updated_at
+      set:
+        tenant_id: x-hasura-tenant-id
+    role: tenant_admin
 select_permissions:
-- permission:
-    columns:
-    - member_id
-    - tenant_id
-    - user_id
-    - email
-    - mobile
-    - firstname
-    - lastname
-    - status_id
-    - role_id
-    - group_id
-    - about_me
-    - company
-    - photo
-    - rating
-    - created_at
-    - updated_at
-    filter:
-      tenant_id:
-        _eq: x-hasura-tenant-id
-  role: member
-- permission:
-    columns:
-    - member_id
-    - group_id
-    - tenant_id
-    - rating
-    - user_id
-    - role_id
-    - status_id
-    - about_me
-    - company
-    - email
-    - firstname
-    - lastname
-    - mobile
-    - photo
-    - created_at
-    - updated_at
-    filter:
-      tenant_id:
-        _eq: x-hasura-tenant-id
-  role: tenant_admin
+  - permission:
+      columns:
+        - member_id
+        - tenant_id
+        - user_id
+        - email
+        - mobile
+        - firstname
+        - lastname
+        - status_id
+        - role_id
+        - group_id
+        - about_me
+        - company
+        - photo
+        - rating
+        - created_at
+        - updated_at
+      filter:
+        tenant_id:
+          _eq: x-hasura-tenant-id
+    role: member
+  - permission:
+      columns:
+        - member_id
+        - group_id
+        - tenant_id
+        - rating
+        - user_id
+        - role_id
+        - status_id
+        - about_me
+        - company
+        - email
+        - firstname
+        - lastname
+        - mobile
+        - photo
+        - created_at
+        - updated_at
+      filter:
+        tenant_id:
+          _eq: x-hasura-tenant-id
+    role: tenant_admin
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - member_id
-    - group_id
-    - tenant_id
-    - rating
-    - user_id
-    - role_id
-    - status_id
-    - about_me
-    - company
-    - email
-    - firstname
-    - lastname
-    - mobile
-    - photo
-    - created_at
-    - updated_at
-    filter: {}
-  role: tenant_admin
+  - permission:
+      check: null
+      columns:
+        - member_id
+        - group_id
+        - tenant_id
+        - rating
+        - user_id
+        - role_id
+        - status_id
+        - about_me
+        - company
+        - email
+        - firstname
+        - lastname
+        - mobile
+        - photo
+        - created_at
+        - updated_at
+      filter: {}
+    role: tenant_admin
 delete_permissions:
-- permission:
-    filter: {}
-  role: tenant_admin
+  - permission:
+      filter: {}
+    role: tenant_admin

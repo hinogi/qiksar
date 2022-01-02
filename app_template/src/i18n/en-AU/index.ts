@@ -2,10 +2,10 @@
 // so you can safely delete all default props below
 
 export default {
-  failed: 'Ouch cobber',
-  success: 'Fair dinkum, it worked!',
-  leader: 'Boss',
-  member: 'Member',
-  State: 'State/Territory',
-  Group: 'Group'
+  failed: "Ouch cobber",
+  success: "Fair dinkum, it worked!",
+  leader: "Boss",
+  member: "Member",
+  State: "State/Territory",
+  Group: "Group",
 };

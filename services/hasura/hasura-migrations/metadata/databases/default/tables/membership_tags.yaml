@@ -6,53 +6,53 @@ configuration:
   custom_name: tags
   custom_root_fields: {}
 array_relationships:
-- name: article_tags
-  using:
-    manual_configuration:
-      column_mapping:
-        tag_id: tag_id
-      insertion_order: null
-      remote_table:
-        name: article_tags
-        schema: membership
+  - name: article_tags
+    using:
+      manual_configuration:
+        column_mapping:
+          tag_id: tag_id
+        insertion_order: null
+        remote_table:
+          name: article_tags
+          schema: membership
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - tag_id
-    - tag
-    - created_at
-    - updated_at
-  role: tenant_admin
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - tag_id
+        - tag
+        - created_at
+        - updated_at
+    role: tenant_admin
 select_permissions:
-- permission:
-    columns:
-    - tag_id
-    - tag
-    - created_at
-    - updated_at
-    filter: {}
-  role: member
-- permission:
-    columns:
-    - tag_id
-    - tag
-    - created_at
-    - updated_at
-    filter: {}
-  role: tenant_admin
+  - permission:
+      columns:
+        - tag_id
+        - tag
+        - created_at
+        - updated_at
+      filter: {}
+    role: member
+  - permission:
+      columns:
+        - tag_id
+        - tag
+        - created_at
+        - updated_at
+      filter: {}
+    role: tenant_admin
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - tag_id
-    - tag
-    - created_at
-    - updated_at
-    filter: {}
-  role: tenant_admin
+  - permission:
+      check: null
+      columns:
+        - tag_id
+        - tag
+        - created_at
+        - updated_at
+      filter: {}
+    role: tenant_admin
 delete_permissions:
-- permission:
-    filter: {}
-  role: tenant_admin
+  - permission:
+      filter: {}
+    role: tenant_admin

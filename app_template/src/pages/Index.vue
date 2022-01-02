@@ -44,11 +44,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { AuthWrapper } from 'src/boot/auth';
+import { defineComponent } from "vue";
+import { AuthWrapper } from "src/boot/auth";
 
 export default defineComponent({
-  name: 'PageIndex',
+  name: "PageIndex",
   components: {},
   setup() {
     return {

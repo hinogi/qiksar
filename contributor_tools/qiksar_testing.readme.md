@@ -8,4 +8,3 @@ dev <- Your home folder for development work
 demo <- Your home folder where you test Qiksar and make training videos
 demo/qiksar <- Where you clone the Qiksar repo to test it works
 demo/app <- Where you move the Qiksar generated app, so that you can test it in an isolated folder away from Qiksar itself
-

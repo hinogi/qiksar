@@ -1,10 +1,9 @@
-import Query, { defaultFetchMode } from 'src/domain/qikflow/base/Query'
-import { defineStore } from 'pinia';
-import { GqlRecords, GqlRecord } from '../base/GqlTypes';
+import Query, { defaultFetchMode } from "src/domain/qikflow/base/Query";
+import { defineStore } from "pinia";
+import { GqlRecords, GqlRecord } from "../base/GqlTypes";
 
 export function CreateStore<Id extends string>(name: Id) {
   const createStore = defineStore(name, {
-
     state: () => {
       return {
         Rows: [] as GqlRecords,
@@ -13,56 +12,63 @@ export function CreateStore<Id extends string>(name: Id) {
         hasRecord: false,
         TableColumns: [],
         view: {} as Query,
-      }
+      };
     },
 
     getters: {
-
-      Busy: (state) => { return state.busy },
-      RecordLoaded: (state) => { return state.hasRecord },
+      Busy: (state) => {
+        return state.busy;
+      },
+      RecordLoaded: (state) => {
+        return state.hasRecord;
+      },
 
       Pagination: (state) => {
         return {
           sortBy: state.view.SortBy,
           descending: !state.view.Asc,
           page: 1,
-          rowsPerPage: 20
-        }
+          rowsPerPage: 20,
+        };
       },
 
       // Return the rows of data in a format suitable for use in drop down selections or menus
       GetSelections: (state): GqlRecords => {
         if (state.Rows.length == 0)
-          console.log('Unable to build Enum Selections from empty dataset: ' + state.view.Schema.EntityType);
+          console.log(
+            "Unable to build Enum Selections from empty dataset: " +
+              state.view.Schema.EntityType
+          );
 
-          const selections = [] as GqlRecords;
-          state.Rows.map(r => selections.push(state.view.Schema.SelectionTranslator(r)));
-      
-          return selections;
+        const selections = [] as GqlRecords;
+        state.Rows.map((r) =>
+          selections.push(state.view.Schema.SelectionTranslator(r))
+        );
+
+        return selections;
       },
 
       NewRecord: (state): GqlRecord => {
         state.CurrentRecord = {};
-        
+
         state.busy = false;
-        state.hasRecord=true;
+        state.hasRecord = true;
 
         return state.CurrentRecord;
-      }
+      },
     },
 
     actions: {
-
       //#region initialise setup
 
-      SetLoaded(loaded = true):void {
+      SetLoaded(loaded = true): void {
         this.hasRecord = loaded;
       },
 
       SetBusy(busy = true): void {
         this.busy = busy;
       },
-      // setup the view and cache the column definitions for table presentation 
+      // setup the view and cache the column definitions for table presentation
       setView(name: string): void {
         this.view = Query.GetView(name);
         this.TableColumns = <[]>this.view.TableColumns;
@@ -74,7 +80,11 @@ export function CreateStore<Id extends string>(name: Id) {
 
       //#region Fetch
 
-      async fetchById(id: string, translate = true, fm = defaultFetchMode): Promise<GqlRecord> {
+      async fetchById(
+        id: string,
+        translate = true,
+        fm = defaultFetchMode
+      ): Promise<GqlRecord> {
         const record = await this.view.FetchById(id, fm, this, translate);
 
         if (!record)
@@ -87,7 +97,11 @@ export function CreateStore<Id extends string>(name: Id) {
         return await this.view.FetchAll(this, translate);
       },
 
-      async fetchWhere(where: string, fm = defaultFetchMode, translate = true): Promise<GqlRecords> {
+      async fetchWhere(
+        where: string,
+        fm = defaultFetchMode,
+        translate = true
+      ): Promise<GqlRecords> {
         return await this.view.FetchWhere(where, fm, this, translate);
       },
 
@@ -103,17 +117,22 @@ export function CreateStore<Id extends string>(name: Id) {
 
       //#region Update
 
-      async update(current: GqlRecord, original: GqlRecord): Promise<GqlRecord> {
+      async update(
+        current: GqlRecord,
+        original: GqlRecord
+      ): Promise<GqlRecord> {
         const diff = {} as GqlRecord;
 
         // Get the primary key
-        diff[this.view.Schema.Key] = this.CurrentRecord[this.view.Schema.Key] as string;
+        diff[this.view.Schema.Key] = this.CurrentRecord[
+          this.view.Schema.Key
+        ] as string;
 
         // Get only the fields which have changed value
         Object.keys(current).map((k: string) => {
-          if (current[k] as string !== original[k] as string)
+          if ((current[k] as string) !== (original[k] as string))
             diff[k] = current[k];
-        })
+        });
 
         //console.log(JSON.stringify(diff));
 
@@ -130,13 +149,12 @@ export function CreateStore<Id extends string>(name: Id) {
 
       async deleteWhere(where: string): Promise<GqlRecord> {
         return await this.view.DeleteWhere(where, this);
-      }
+      },
 
       //#endregion
 
       //#endregion
-
-    }
+    },
   });
 
   const store = createStore();

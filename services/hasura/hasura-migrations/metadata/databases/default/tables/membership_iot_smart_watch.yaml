@@ -6,33 +6,33 @@ configuration:
   custom_name: iot_smart_watch
   custom_root_fields: {}
 object_relationships:
-- name: message
-  using:
-    manual_configuration:
-      column_mapping:
-        message_id: message_id
-      insertion_order: null
-      remote_table:
-        name: iot_messages
-        schema: membership
+  - name: message
+    using:
+      manual_configuration:
+        column_mapping:
+          message_id: message_id
+        insertion_order: null
+        remote_table:
+          name: iot_messages
+          schema: membership
 select_permissions:
-- permission:
-    columns:
-    - temperature
-    - heart_bpm
-    - message_id
-    - O2Sat
-    - step_count
-    - created_at
-    filter: {}
-  role: member
-- permission:
-    columns:
-    - temperature
-    - heart_bpm
-    - message_id
-    - O2Sat
-    - step_count
-    - created_at
-    filter: {}
-  role: tenant_admin
+  - permission:
+      columns:
+        - temperature
+        - heart_bpm
+        - message_id
+        - O2Sat
+        - step_count
+        - created_at
+      filter: {}
+    role: member
+  - permission:
+      columns:
+        - temperature
+        - heart_bpm
+        - message_id
+        - O2Sat
+        - step_count
+        - created_at
+      filter: {}
+    role: tenant_admin
